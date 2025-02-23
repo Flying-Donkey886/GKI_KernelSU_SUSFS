@@ -95,13 +95,7 @@ jobs:
         env:
           BOOT_SIGN_KEY: ${{ secrets.BOOT_SIGN_KEY }}
         run: |
-          if [ ! -z "$BOOT_SIGN_KEY" ]; then
-            echo "$BOOT_SIGN_KEY" > ./kernel-build-tools/linux-x86/share/avb/testkey_rsa2048.pem
-            echo "BOOT_SIGN_KEY_PATH=$GITHUB_WORKSPACE/kernel-build-tools/linux-x86/share/avb/testkey_rsa2048.pem" >> $GITHUB_ENV
-          else
-            echo "BOOT_SIGN_KEY is not set. Exiting..."
-            exit 1
-          fi
+          echo "BOOT_SIGN_KEY_PATH=$GITHUB_WORKSPACE/kernel-build-tools/linux-x86/share/avb/testkey_rsa2048.pem" >> $GITHUB_ENV
 
       - name: Install Repo
         run: |
@@ -286,7 +280,7 @@ jobs:
           echo "Changing to configuration directory: $CONFIG..."
           cd "$CONFIG"
 
-          sed -i '$s|echo "\$res"|echo "\$res-Wild+"|' ./common/scripts/setlocalversion
+          sed -i '$s|echo "\$res"|echo "-android14-11-gd03cb1d7abcd-ab12592111"|' ./common/scripts/setlocalversion
 
           # Run perl command to modify UTS_VERSION
           perl -pi -e 's{UTS_VERSION="\$\(echo \$UTS_VERSION \$CONFIG_FLAGS \$TIMESTAMP \| cut -b -\$UTS_LEN\)"}{UTS_VERSION="#1 SMP PREEMPT Sat Apr 20 04:20:00 UTC 2024"}' ./common/scripts/mkcompile_h
